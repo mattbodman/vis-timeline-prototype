@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/cypress",
+    "module": "es2015",
+    "types": [
+      "cypress",
+      "node"
+    ]
+  },
+  "include": [
+    "../src/**/*.cy.ts",
+    "../cypress/**/*.ts"
+  ]
+}

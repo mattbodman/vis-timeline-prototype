@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/cypress",
+    "types": [
+      "cypress",
+      "mocha",
+      "node"
+    ],
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*.cy.ts",
+    "cypress/**/*.ts"
+  ],
+  "exclude": []
+}

@@ -1,1 +1,116 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Import Angular Material theme - indigo/pink */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Import vis-timeline CSS */
+@import 'vis-timeline/styles/vis-timeline-graph2d.css';
+
+/* Material Icons */
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+/* Global Material theme setup */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Ensure buttons always have pointer cursor globally */
+button, [mat-button], [mat-raised-button], [mat-flat-button] {
+  cursor: pointer !important;
+}
+
+/* Very aggressive global override */
+* button,
+*[role="button"] {
+  cursor: pointer !important;
+}
+
+/* Additional timeline styles */
+.vis-timeline {
+  border: 1px solid #ccc;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.vis-item {
+  border-radius: 4px;
+}
+
+.vis-group {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Ensure Material components in timeline groups render properly */
+.vis-group .mat-mdc-raised-button {
+  --mdc-protected-button-container-elevation: 2;
+  --mdc-protected-button-hover-container-elevation: 4;
+  --mdc-protected-button-focus-container-elevation: 4;
+  --mdc-protected-button-pressed-container-elevation: 8;
+  cursor: pointer !important;
+}
+
+/* Force pointer cursor on all button elements in timeline groups */
+.vis-group button,
+.vis-group .mat-mdc-raised-button,
+.vis-group .mat-mdc-button,
+.vis-group [mat-raised-button],
+.vis-group [mat-button] {
+  cursor: pointer !important;
+}
+
+.vis-group button * {
+  cursor: pointer !important;
+}
+
+/* Target our specific custom components */
+app-custom-group-button,
+app-custom-group-button *,
+app-custom-group-button button,
+app-custom-group-button .group-button {
+  cursor: pointer !important;
+}
+
+/* Override any vis-timeline cursor styles - be more aggressive */
+.vis-timeline .vis-group * {
+  cursor: pointer !important;
+}
+
+.vis-timeline .vis-group button {
+  cursor: pointer !important;
+}
+
+.vis-timeline .vis-group app-custom-group-button {
+  cursor: pointer !important;
+}
+
+.vis-timeline .vis-group app-custom-group-button * {
+  cursor: pointer !important;
+}
+
+/* Target the specific button classes that Material uses */
+.vis-timeline .vis-group .mat-mdc-button,
+.vis-timeline .vis-group .mat-mdc-raised-button,
+.vis-timeline .vis-group .mdc-button {
+  cursor: pointer !important;
+}
+
+/* Most aggressive approach - target everything in timeline groups */
+.vis-timeline .vis-group-label,
+.vis-timeline .vis-group {
+  cursor: default !important;
+}
+
+.vis-timeline .vis-group button,
+.vis-timeline .vis-group [role="button"],
+.vis-timeline .vis-group .clickable {
+  cursor: pointer !important;
+}
+
+/* Fix any z-index issues */
+.vis-group {
+  z-index: 1;
+}
+
+.vis-group .mat-mdc-raised-button,
+.vis-group .mat-mdc-icon-button {
+  position: relative;
+  z-index: 2;
+}
