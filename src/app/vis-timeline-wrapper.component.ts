@@ -131,7 +131,7 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
       const colors: Array<'primary' | 'accent' | 'warn'> = ['primary', 'accent', 'warn'];
       const icons: string[] = ['add', 'edit', 'star'];
       const groupIndex = (typeof group.id === 'number' ? group.id - 1 : 0) % colors.length;
-      
+
       buttonComponent.setInput('color', colors[groupIndex]);
       buttonComponent.setInput('iconName', icons[groupIndex]);
 
@@ -248,33 +248,6 @@ export class CustomGroupButton {
       more_vert
     </mat-icon>
   `,
-  styles: [
-    `
-      .group-icon {
-        font-size: 20px;
-        cursor: pointer;
-        margin-left: 8px;
-        padding: 4px;
-        border-radius: 50%;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .group-icon:hover {
-        background-color: rgba(0, 0, 0, 0.04);
-        transform: scale(1.1);
-      }
-
-      .group-icon:active {
-        background-color: rgba(0, 0, 0, 0.08);
-        transform: scale(0.95);
-      }
-
-      :host {
-        display: inline-block;
-        vertical-align: middle;
-      }
-    `,
-  ],
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
