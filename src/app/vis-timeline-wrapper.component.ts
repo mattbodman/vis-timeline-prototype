@@ -5,7 +5,6 @@ import {
   ComponentRef,
   ElementRef,
   EnvironmentInjector,
-  Injector,
   OnDestroy,
   OnInit,
   computed,
@@ -52,7 +51,6 @@ export interface VisDataGroup {
 })
 export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
   private readonly applicationRef = inject(ApplicationRef);
-  private readonly injector = inject(Injector);
   private readonly environmentInjector = inject(EnvironmentInjector);
 
   private timelineContainer = viewChild.required<ElementRef<HTMLDivElement>>('timelineContainer');
@@ -99,8 +97,7 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
     this.timeline = new Timeline(container, this.items(), this.groups(), this.timelineOptions());
   }
 
-  private createGroupTemplate(group: VisDataGroup, element: HTMLElement): HTMLElement {
-    // Null safety check
+  private createGroupTemplate(group: VisDataGroup): HTMLElement {
     if (!group) {
       const fallback = document.createElement('div');
       fallback.textContent = 'Unknown Group';
@@ -127,8 +124,16 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
         environmentInjector: this.environmentInjector,
       });
 
-      // Set the group ID input
+      // Set the group ID input and color based on group
       buttonComponent.setInput('groupId', group.id);
+
+      // Assign different colors and icons to different groups
+      const colors: Array<'primary' | 'accent' | 'warn'> = ['primary', 'accent', 'warn'];
+      const icons: string[] = ['add', 'edit', 'star'];
+      const groupIndex = (typeof group.id === 'number' ? group.id - 1 : 0) % colors.length;
+      
+      buttonComponent.setInput('color', colors[groupIndex]);
+      buttonComponent.setInput('iconName', icons[groupIndex]);
 
       // Attach to Angular lifecycle
       this.applicationRef.attachView(buttonComponent.hostView);
@@ -208,70 +213,23 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
   template: `
     <button
       mat-raised-button
-      color="primary"
+      [color]="color()"
       type="button"
       (click)="onButtonClick()"
       class="group-button"
       [attr.data-group]="groupId()"
     >
-      <mat-icon class="button-icon">add</mat-icon>
+      <mat-icon class="button-icon">{{ iconName() }}</mat-icon>
       Add Task
     </button>
   `,
-  styles: [
-    `
-      .group-button {
-        font-size: 12px !important;
-        min-width: auto !important;
-        height: 32px !important;
-        padding: 0 12px !important;
-        line-height: 32px !important;
-        cursor: pointer !important;
-
-        /* Ensure proper Material elevation */
-        box-shadow:
-          0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-          0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-          0px 1px 5px 0px rgba(0, 0, 0, 0.12) !important;
-
-        /* Material Design primary color override for indigo theme */
-        background-color: #3f51b5 !important;
-        color: white !important;
-
-        border-radius: 4px !important;
-        text-transform: uppercase;
-        font-weight: 500;
-        letter-spacing: 0.0892857143em;
-      }
-
-      .group-button:hover {
-        box-shadow:
-          0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-          0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-          0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
-
-        background-color: #3949ab !important;
-      }
-
-      .button-icon {
-        font-size: 16px !important;
-        height: 16px !important;
-        width: 16px !important;
-        margin-right: 4px !important;
-        margin-left: -2px !important;
-      }
-
-      /* Ensure the button takes up proper space */
-      :host {
-        display: inline-block;
-      }
-    `,
-  ],
   imports: [MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomGroupButton {
   readonly groupId = input.required<string | number>();
+  readonly color = input<'primary' | 'accent' | 'warn'>('primary');
+  readonly iconName = input.required<string>();
 
   onButtonClick(): void {
     console.log('🎯 Material raised button (indigo theme) clicked for group:', this.groupId());
@@ -293,33 +251,24 @@ export class CustomGroupButton {
   styles: [
     `
       .group-icon {
-        font-size: 20px !important;
-        width: 20px !important;
-        height: 20px !important;
+        font-size: 20px;
         cursor: pointer;
-        color: #666 !important;
         margin-left: 8px;
         padding: 4px;
         border-radius: 50%;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-        /* Material ripple effect simulation */
-        position: relative;
-        overflow: hidden;
       }
 
       .group-icon:hover {
-        color: #3f51b5 !important; /* Indigo primary color */
-        background-color: rgba(63, 81, 181, 0.08) !important; /* Indigo with alpha */
+        background-color: rgba(0, 0, 0, 0.04);
         transform: scale(1.1);
       }
 
       .group-icon:active {
-        background-color: rgba(63, 81, 181, 0.16) !important;
+        background-color: rgba(0, 0, 0, 0.08);
         transform: scale(0.95);
       }
 
-      /* Ensure proper display */
       :host {
         display: inline-block;
         vertical-align: middle;

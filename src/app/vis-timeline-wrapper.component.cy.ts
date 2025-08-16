@@ -119,15 +119,17 @@ describe('VisTimelineWrapperComponent - Material Design Integration', () => {
     // Check if Material icons are rendered within buttons
     cy.get('[mat-raised-button] mat-icon').should('have.length', 3); // One icon per button
 
-    // Verify icons show the "add" icon
-    cy.get('[mat-raised-button] mat-icon').first().should('contain.text', 'add');
+    // Verify different icons for each group
+    cy.get('[mat-raised-button] mat-icon').eq(0).should('contain.text', 'add'); // Group 1
+    cy.get('[mat-raised-button] mat-icon').eq(1).should('contain.text', 'edit'); // Group 2  
+    cy.get('[mat-raised-button] mat-icon').eq(2).should('contain.text', 'star'); // Group 3
 
-    // Verify icon styling
+    // Verify icon styling (Material default sizes)
     cy.get('[mat-raised-button] mat-icon')
       .first()
-      .should('have.css', 'font-size', '16px')
-      .should('have.css', 'width', '16px')
-      .should('have.css', 'height', '16px');
+      .should('have.css', 'font-size', '18px')
+      .should('have.css', 'width', '18px')
+      .should('have.css', 'height', '18px');
   });
 
   it('should render separate Material icons (more_vert) in group templates', () => {
@@ -154,7 +156,7 @@ describe('VisTimelineWrapperComponent - Material Design Integration', () => {
       .contains('more_vert')
       .first()
       .should('have.css', 'cursor', 'pointer')
-      .should('have.css', 'color', 'rgb(102, 102, 102)'); // Default gray color
+      .should('have.css', 'color', 'rgb(77, 77, 77)'); // Material default gray color
   });
 
   it('should handle Material button clicks with proper event handling', () => {
@@ -215,6 +217,73 @@ describe('VisTimelineWrapperComponent - Material Design Integration', () => {
       '🎨 Material icon (indigo theme) clicked for group:',
       1
     );
+  });
+
+  it('should render three different Material icons (add, edit, star)', () => {
+    cy.mount(VisTimelineWrapperComponent, {
+      componentProperties: {
+        items: mockItems,
+        groups: mockGroups,
+        options: mockOptions,
+      },
+      providers: [provideAnimationsAsync()],
+    });
+
+    // Wait for timeline and Material components to initialize
+    cy.wait(2000);
+
+    // Verify we have 3 buttons with different icons
+    cy.get('[mat-raised-button] mat-icon').should('have.length', 3);
+
+    // Check Group 1 has 'add' icon
+    cy.get('[mat-raised-button]')
+      .eq(0)
+      .find('mat-icon')
+      .should('contain.text', 'add');
+
+    // Check Group 2 has 'edit' icon
+    cy.get('[mat-raised-button]')
+      .eq(1)
+      .find('mat-icon')
+      .should('contain.text', 'edit');
+
+    // Check Group 3 has 'star' icon
+    cy.get('[mat-raised-button]')
+      .eq(2)
+      .find('mat-icon')
+      .should('contain.text', 'star');
+  });
+
+  it('should render all three Material color variants (primary, accent, warn)', () => {
+    cy.mount(VisTimelineWrapperComponent, {
+      componentProperties: {
+        items: mockItems,
+        groups: mockGroups,
+        options: mockOptions,
+      },
+      providers: [provideAnimationsAsync()],
+    });
+
+    // Wait for timeline and Material components to initialize
+    cy.wait(2000);
+
+    // Verify we have 3 buttons with different colors
+    cy.get('[mat-raised-button]').should('have.length', 3);
+
+    // Check first button (Group 1) has primary color (indigo)
+    cy.get('[mat-raised-button]')
+      .eq(0)
+      .should('have.css', 'background-color', 'rgb(63, 81, 181)'); // Primary - Indigo
+
+    // Check second button (Group 2) has accent color (pink)
+    cy.get('[mat-raised-button]')
+      .eq(1)
+      .should('have.css', 'background-color', 'rgb(255, 64, 129)'); // Accent - Pink
+
+    // Check third button (Group 3) has warn color (red)  
+    cy.get('[mat-raised-button]')
+      .eq(2)
+      .should('have.css', 'background-color', 'rgb(244, 67, 54)'); // Warn - Red
   });
 
   it('should apply indigo theme colors correctly', () => {
