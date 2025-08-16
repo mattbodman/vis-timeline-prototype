@@ -10,24 +10,33 @@
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 
 /* Global Material theme setup */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 /* Ensure buttons always have pointer cursor globally */
-button, [mat-button], [mat-raised-button], [mat-flat-button] {
+button,
+[mat-button],
+[mat-raised-button],
+[mat-flat-button] {
   cursor: pointer !important;
 }
 
 /* Very aggressive global override */
 * button,
-*[role="button"] {
+*[role='button'] {
   cursor: pointer !important;
 }
 
 /* Additional timeline styles */
 .vis-timeline {
   border: 1px solid #ccc;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .vis-item {
@@ -99,7 +108,7 @@ app-custom-group-button .group-button {
 }
 
 .vis-timeline .vis-group button,
-.vis-timeline .vis-group [role="button"],
+.vis-timeline .vis-group [role='button'],
 .vis-timeline .vis-group .clickable {
   cursor: pointer !important;
 }

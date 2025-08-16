@@ -1,68 +1,74 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { VisTimelineWrapperComponent, VisDataItem, VisDataGroup } from './vis-timeline-wrapper.component';
+
 import { TimelineOptions } from 'vis-timeline/standalone';
+
+import {
+  VisDataGroup,
+  VisDataItem,
+  VisTimelineWrapperComponent,
+} from './vis-timeline-wrapper.component';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, VisTimelineWrapperComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('vis-timeline-prototype');
-  
+
   protected readonly timelineItems = signal<VisDataItem[]>([
     {
       id: 1,
       group: 1,
       content: 'Task 1',
       start: new Date(2024, 0, 1),
-      end: new Date(2024, 0, 3)
+      end: new Date(2024, 0, 3),
     },
     {
       id: 2,
       group: 1,
       content: 'Task 2',
       start: new Date(2024, 0, 4),
-      end: new Date(2024, 0, 6)
+      end: new Date(2024, 0, 6),
     },
     {
       id: 3,
       group: 2,
       content: 'Task 3',
       start: new Date(2024, 0, 2),
-      end: new Date(2024, 0, 8)
+      end: new Date(2024, 0, 8),
     },
     {
       id: 4,
       group: 2,
       content: 'Task 4',
       start: new Date(2024, 0, 7),
-      end: new Date(2024, 0, 10)
+      end: new Date(2024, 0, 10),
     },
     {
       id: 5,
       group: 3,
       content: 'Task 5',
       start: new Date(2024, 0, 5),
-      end: new Date(2024, 0, 12)
-    }
+      end: new Date(2024, 0, 12),
+    },
   ]);
 
   protected readonly timelineGroups = signal<VisDataGroup[]>([
     {
       id: 1,
-      content: 'Development Team'
+      content: 'Development Team',
     },
     {
       id: 2,
-      content: 'Design Team'
+      content: 'Design Team',
     },
     {
       id: 3,
-      content: 'QA Team'
-    }
+      content: 'QA Team',
+    },
   ]);
 
   protected readonly timelineOptions = signal<TimelineOptions>({
@@ -70,6 +76,6 @@ export class App {
     height: '400px',
     stack: true,
     editable: false,
-    showCurrentTime: false
+    showCurrentTime: false,
   });
 }
