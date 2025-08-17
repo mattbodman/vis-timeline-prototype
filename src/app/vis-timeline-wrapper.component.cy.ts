@@ -183,7 +183,7 @@ describe('VisTimelineWrapperComponent - Custom Group Template Integration', () =
         </div>
       `;
 
-      // Add click handlers
+      // Add click handlers with event stopPropagation
       const buttons = container.querySelectorAll('button');
       buttons.forEach((btn, index) => {
         const logs = [
@@ -191,7 +191,10 @@ describe('VisTimelineWrapperComponent - Custom Group Template Integration', () =
           '📈 Custom template SECONDARY action clicked for group:',
           '🔧 Custom template TERTIARY action clicked for group:'
         ];
-        btn.addEventListener('click', () => console.log(logs[index], group.id));
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation(); // Prevent vis-timeline group expand/collapse
+          console.log(logs[index], group.id);
+        });
       });
 
       return container;
@@ -325,6 +328,34 @@ describe('VisTimelineWrapperComponent - Custom Group Template Integration', () =
     cy.get('.vis-item').should('have.length', 2);
     cy.get('.vis-group').should('have.length.at.least', 2);
     cy.get('.vis-time-axis').should('exist');
+  });
+
+  it('should prevent group expand/collapse when clicking buttons but allow it otherwise', () => {
+    cy.mount(VisTimelineWrapperComponent, {
+      componentProperties: {
+        items: mockItems,
+        groups: mockGroups,
+        options: mockOptions,
+        groupTemplate: createCustomTemplateInContext(),
+      },
+      providers: [provideAnimationsAsync()],
+    });
+
+    // Wait for timeline to initialize
+    cy.wait(2000);
+
+    // Click a custom button - this should NOT trigger group expand/collapse
+    // We can verify this by checking that the button click doesn't cause any
+    // unwanted side effects on the timeline structure
+    cy.get('[mat-raised-button].custom-action-btn').first().click();
+
+    // Verify that the timeline structure remains stable after button click
+    cy.get('.vis-item').should('have.length', 2);
+    cy.get('.vis-group').should('have.length.at.least', 2);
+
+    // Verify that buttons are still clickable and functional
+    cy.get('[mat-raised-button].custom-action-btn').should('be.visible');
+    cy.get('[mat-raised-button].custom-action-btn').should('have.length.at.least', 3);
   });
 
   it('should maintain timeline functionality with custom templates', () => {

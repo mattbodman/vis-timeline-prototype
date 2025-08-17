@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
         <button 
           mat-raised-button
           color="primary"
-          (click)="onPrimaryAction()"
+          (click)="onPrimaryAction($event)"
           [attr.data-group]="groupId()"
           class="custom-action-btn"
         >
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
         <button 
           mat-raised-button
           color="accent"
-          (click)="onSecondaryAction()"
+          (click)="onSecondaryAction($event)"
           [attr.data-group]="groupId()"
           class="custom-action-btn"
         >
@@ -38,7 +38,7 @@ import { MatIconModule } from '@angular/material/icon';
         <button 
           mat-raised-button
           color="warn"
-          (click)="onTertiaryAction()"
+          (click)="onTertiaryAction($event)"
           [attr.data-group]="groupId()"
           class="custom-action-btn"
         >
@@ -122,15 +122,18 @@ export class CustomGroupTemplateComponent {
   readonly groupId = input.required<string | number>();
   readonly groupContent = input.required<string>();
 
-  onPrimaryAction(): void {
+  onPrimaryAction(event: Event): void {
+    event.stopPropagation(); // Prevent vis-timeline group expand/collapse
     console.log('🌟 Custom template PRIMARY action clicked for group:', this.groupId());
   }
 
-  onSecondaryAction(): void {
+  onSecondaryAction(event: Event): void {
+    event.stopPropagation(); // Prevent vis-timeline group expand/collapse
     console.log('📈 Custom template SECONDARY action clicked for group:', this.groupId());
   }
 
-  onTertiaryAction(): void {
+  onTertiaryAction(event: Event): void {
+    event.stopPropagation(); // Prevent vis-timeline group expand/collapse
     console.log('🔧 Custom template TERTIARY action clicked for group:', this.groupId());
   }
 }
