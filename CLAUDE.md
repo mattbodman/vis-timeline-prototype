@@ -55,23 +55,28 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - The custom group template must be able to correctly render Angular Material Components - button and icon
 - The prototype should be tested with headless Cypress component testing
 
-## ✅ Project Status: COMPLETED
+## ✅ Project Status: COMPLETED + ENHANCED
 
-**Successfully implemented vis-timeline integration with Angular Material components!**
+**Successfully implemented vis-timeline integration with Angular Material components AND flexible custom group template support!**
 
 ### Key Achievements:
 - ✅ **VisTimelineWrapperComponent** created with full vis-timeline integration
 - ✅ **Angular Material Integration** - Dynamic creation of Material buttons and icons within timeline group templates
 - ✅ **Dynamic Color & Icon Support** - Customizable colors (primary/accent/warn) and icons per group
 - ✅ **Angular v19 + TypeScript** - Modern Angular architecture with signals and standalone components
-- ✅ **Cypress Component Testing** - Full test suite (11/11 tests passing)
+- ✅ **Cypress Component Testing** - Full test suite (16/16 tests passing)
 - ✅ **Material Design Theme** - Indigo/pink theme with proper Material styling
+- ✅ **ENHANCED: Flexible GroupTemplate Support** - Optional signal input for custom group templates
+- ✅ **ENHANCED: Custom Material Template** - Demonstration of custom templates using Angular Material components
 
 ### Technical Implementation:
 - **Dynamic Component Creation**: Uses Angular's `createComponent` API to dynamically render Material components
 - **Custom Group Templates**: Successfully renders Material buttons (`mat-raised-button`) and icons (`mat-icon`) within vis-timeline groups  
 - **Lifecycle Management**: Proper cleanup of Angular components to prevent memory leaks
 - **Material Design**: Full indigo/pink theme with elevation, typography, and interaction states
+- **ENHANCED: Generic GroupTemplate Support**: Wrapper accepts optional `GroupTemplateFunction` signal input
+- **ENHANCED: Template Flexibility**: Supports both default Material templates and custom user-provided templates
+- **ENHANCED: Backward Compatibility**: All existing functionality preserved when no custom template provided
 
 ### Key Features Implemented
 
@@ -87,6 +92,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 #### 3. Component Architecture
 ```typescript
+// Default Material Template Components (built-in)
 CustomGroupButton {
   readonly groupId = input.required<string | number>();
   readonly color = input<'primary' | 'accent' | 'warn'>('primary');
@@ -97,6 +103,37 @@ CustomGroupIcon {
   readonly groupId = input.required<string | number>();
   // No custom styles - uses default Material Design
 }
+
+// ENHANCED: Wrapper Component with Optional Custom Template
+VisTimelineWrapperComponent {
+  readonly items = input.required<VisDataItem[]>();
+  readonly groups = input.required<VisDataGroup[]>();
+  readonly options = input<TimelineOptions>({});
+  readonly groupTemplate = input<GroupTemplateFunction>(); // NEW: Optional custom template
+}
+
+// ENHANCED: Custom Template Component (demo implementation)
+CustomGroupTemplateComponent {
+  readonly groupId = input.required<string | number>();
+  readonly groupContent = input.required<string>();
+  // Uses mat-raised-button and mat-icon components
+}
+```
+
+#### 4. ENHANCED: GroupTemplate Type System
+```typescript
+export type GroupTemplateFunction = (group: VisDataGroup) => HTMLElement;
+
+// Usage Examples:
+// Default behavior (no custom template)
+<app-vis-timeline-wrapper [items]="items" [groups]="groups" [options]="options">
+
+// With custom template
+<app-vis-timeline-wrapper 
+  [items]="items" 
+  [groups]="groups" 
+  [options]="options"
+  [groupTemplate]="customGroupTemplate">
 ```
 
 ### Dependencies Fixed:
@@ -111,7 +148,11 @@ CustomGroupIcon {
 - Event handling for buttons and icons
 - Theme colors and accessibility attributes
 - Timeline functionality with custom templates
-- 11 comprehensive Cypress component tests passing
+- **ENHANCED: Custom template rendering and functionality**
+- **ENHANCED: Custom template Material component integration**
+- **ENHANCED: Custom template button click handling**
+- **ENHANCED: Fallback to default template when no custom template provided**
+- **16 comprehensive Cypress component tests passing** (11 original + 5 new custom template tests)
 
 ### Commands:
 ```bash
@@ -134,5 +175,13 @@ npm run cypress:open
 - Tests focus on functionality over styling for maintainability
 - All Material Design components use authentic theming (no CSS overrides)
 - Updated tests accommodate style changes (removed custom icon styling)
+- **ENHANCED: Generic template system supports any custom GroupTemplateFunction**
+- **ENHANCED: Custom template service demonstrates proper Angular Material integration**
+- **ENHANCED: App component includes toggle interface for switching between default and custom templates**
 
-**Proof of Concept Complete**: Angular Material components with dynamic colors and icons successfully render and function within vis-timeline group templates!
+### NEW: Additional Components Created
+- `CustomGroupTemplateComponent` - Example custom template using Angular Material components
+- `CustomGroupTemplateService` - Service for creating custom templates with proper lifecycle management
+- Enhanced test suite with comprehensive custom template coverage
+
+**Proof of Concept Complete**: Angular Material components with dynamic colors and icons successfully render and function within vis-timeline group templates! **ENHANCED**: Generic custom template system allows any user-defined templates while maintaining full backward compatibility.

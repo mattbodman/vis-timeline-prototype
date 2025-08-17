@@ -2,12 +2,28 @@
   <div class="content">
     <div class="timeline-section">
       <h1>{{ title() }}</h1>
-      <p>Vis Timeline with Custom Angular Material Group Templates</p>
+      <p>Vis Timeline with Custom Group Templates</p>
+      
+      <div class="controls">
+        <label class="toggle-label">
+          <input 
+            type="checkbox" 
+            [checked]="useCustomTemplate()"
+            (change)="toggleTemplate()"
+            class="toggle-checkbox"
+          />
+          Use Custom Group Template 
+          <span class="template-status">
+            (Current: {{ useCustomTemplate() ? 'Custom Gradient Template' : 'Default Material Template' }})
+          </span>
+        </label>
+      </div>
 
       <app-vis-timeline-wrapper
         [items]="timelineItems()"
         [groups]="timelineGroups()"
         [options]="timelineOptions()"
+        [groupTemplate]="customGroupTemplate()"
       >
       </app-vis-timeline-wrapper>
     </div>

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 
 import { TimelineOptions } from 'vis-timeline/standalone';
 
@@ -6,7 +6,9 @@ import {
   VisDataGroup,
   VisDataItem,
   VisTimelineWrapperComponent,
+  GroupTemplateFunction,
 } from './vis-timeline-wrapper.component';
+import { CustomGroupTemplateService } from './custom-group-template.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,7 @@ import {
   styleUrl: './app.css',
 })
 export class App {
+  private readonly customTemplateService = new CustomGroupTemplateService();
   protected readonly title = signal('vis-timeline-prototype');
 
   protected readonly timelineItems = signal<VisDataItem[]>([
@@ -77,4 +80,18 @@ export class App {
     editable: false,
     showCurrentTime: false,
   });
+
+  // Toggle between default and custom template
+  protected readonly useCustomTemplate = signal(false);
+
+  // Custom group template function
+  protected readonly customGroupTemplate = computed<GroupTemplateFunction | undefined>(() => {
+    return this.useCustomTemplate() 
+      ? this.customTemplateService.createCustomGroupTemplate()
+      : undefined;
+  });
+
+  protected toggleTemplate(): void {
+    this.useCustomTemplate.update(current => !current);
+  }
 }

@@ -34,6 +34,8 @@ export interface VisDataGroup {
   title?: string;
 }
 
+export type GroupTemplateFunction = (group: VisDataGroup) => HTMLElement;
+
 @Component({
   selector: 'app-vis-timeline-wrapper',
   template: ` <div #timelineContainer class="timeline-container"></div> `,
@@ -58,6 +60,7 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
   readonly items = input.required<VisDataItem[]>();
   readonly groups = input.required<VisDataGroup[]>();
   readonly options = input<TimelineOptions>({});
+  readonly groupTemplate = input<GroupTemplateFunction>();
 
   private timeline: Timeline | null = null;
   private componentRefs: ComponentRef<any>[] = [];
@@ -67,7 +70,7 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
 
     // Add custom group template
     if (this.groups().length > 0) {
-      baseOptions.groupTemplate = this.createGroupTemplate.bind(this);
+      baseOptions.groupTemplate = this.getEffectiveGroupTemplate.bind(this);
     }
 
     return baseOptions;
@@ -97,7 +100,18 @@ export class VisTimelineWrapperComponent implements OnInit, OnDestroy {
     this.timeline = new Timeline(container, this.items(), this.groups(), this.timelineOptions());
   }
 
-  private createGroupTemplate(group: VisDataGroup): HTMLElement {
+  private getEffectiveGroupTemplate(group: VisDataGroup): HTMLElement {
+    // Use provided custom group template if available
+    const customTemplate = this.groupTemplate();
+    if (customTemplate) {
+      return customTemplate(group);
+    }
+
+    // Fallback to default template
+    return this.createDefaultGroupTemplate(group);
+  }
+
+  private createDefaultGroupTemplate(group: VisDataGroup): HTMLElement {
     if (!group) {
       const fallback = document.createElement('div');
       fallback.textContent = 'Unknown Group';
